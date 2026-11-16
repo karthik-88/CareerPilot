@@ -1,12 +1,21 @@
 
 from google import genai
 
-client = genai.Client()
+client = None
+
+
+def _get_client():
+    global client
+
+    if client is None:
+        client = genai.Client()
+
+    return client
 
 
 def generate_response(prompt):
 
-    response = client.models.generate_content(
+    response = _get_client().models.generate_content(
         model="gemini-3.5-flash-lite",
         contents=prompt
     )
@@ -16,7 +25,7 @@ def generate_response(prompt):
 
 def stream_response(prompt):
 
-    response_stream = client.models.generate_content_stream(
+    response_stream = _get_client().models.generate_content_stream(
         model="gemini-3.5-flash-lite",
         contents=prompt
     )
